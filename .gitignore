@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+out*/
+*.zip
+*.log
+kernel-metadata.json
+full.py
+body_*.py
+hist.json
+.env
+kaggle.json
+*.pdf
+dalphin_metadata.csv
+images/
