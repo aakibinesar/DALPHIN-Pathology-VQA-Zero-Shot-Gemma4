@@ -1,0 +1,9 @@
+# Notebook runs used the Kaggle image (torch 2.11, transformers 5.16) plus bitsandbytes (pip-installed inside the notebook).
+pandas
+numpy
+pillow
+torch
+transformers
+bitsandbytes
+sentence-transformers   # only for the BioBERT selection notebook (kernels/54_mbr)
+pymupdf                 # only if you want to rebuild method-description PDFs
