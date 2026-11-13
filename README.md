@@ -41,7 +41,6 @@ Each number is the best of several attempts (tissue 8, neoplastic status 7, beha
 | plurality vote over runs with different inputs | neoplastic status 0.881 → 0.904, multiple choice 0.680 → 0.697 |
 
 ## 4. What did not help (measured, briefly)
-- Gemma-4 thinking mode works but runs at about 3.5 tokens/s on two T4s: about 17.7 GPU hours for one task at a 1,024-token budget, so it was not affordable.
 - Putting the images before the text (the model card's advice): behaviour 0.515 against 0.560.
 - MedGemma-27B-it (4-bit, same pipeline): diagnosis 0.590 against 0.734 for Gemma-4-31B; its tissue answers agreed with Gemma's on only 16% of cases and were not submitted.
 - Choosing the most central diagnosis among four of my own runs with the organisers' BioBERT model: 0.722, below the best single run (0.734).
@@ -57,7 +56,7 @@ Constraints:
 
 With more resources I would:
 - run larger or full-precision models, which the top entries on the leaderboards suggest do better;
-- use Gemma-4's thinking mode, which works but costs about 17.7 GPU hours for a single task on two T4s;
+- evaluate Gemma-4's thinking mode, which I only timed (6 multiple-choice questions: it works, at about 3.5 tokens per second on two T4s, so about 17.7 GPU hours for one task) and never scored;
 - follow the organisers' sequential protocol, keeping the earlier images in the conversation instead of text-only history.
 
 ## 6. Repository layout
