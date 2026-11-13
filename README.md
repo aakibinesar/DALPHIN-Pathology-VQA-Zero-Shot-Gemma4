@@ -8,7 +8,7 @@ All entries are **zero-shot**: no training or fine-tuning of any model. The best
 | task | metric | smallest model (Qwen2.5-VL-3B) | best entry | best configuration |
 |---|---|---|---|---|
 | Tissue / organ | hierarchical organ score | 0.154 | **0.650** | Gemma-4-31B, organisers' prompt only, image token budget 560 |
-| Neoplastic status | F1 (positive class) | 0.683 | **0.909** | Gemma-4-31B with the model's own diagnosis answer (independent run) as text context |
+| Neoplastic status | F1 (positive class) | 0.683 | **0.909** | Gemma-4-31B with the model's own diagnosis answer (independent run) as text context; diagnosis is a later question in the official order, see section 2 |
 | Behaviour | Cohen's kappa | 0.038 | **0.663** | Gemma-4-31B, text context of its own earlier answers (see section 5: this board is noisy) |
 | Diagnosis | BioBERT similarity | 0.590 | **0.734** | Gemma-4-31B, neoplasm answer as text context, organisers' prompt only |
 | Multiple choice | accuracy | 0.407 | **0.697** | plurality vote of four runs with different inputs |
@@ -27,7 +27,7 @@ Each number is the best of several attempts (tissue 8, neoplastic status 7, beha
 - **Images:** the case's overview and region-of-interest images at their native size (about 1,000 px). Gemma-4 gives every image a fixed token budget of 280 by default; raising it to 560 matches the native size (tissue +0.04).
 - **Answer cleaning:** fixed rules per task (yes/no, the four behaviour labels, a single letter, first line for tissue, brackets removed for diagnosis), written to mirror the organisers' published curation rules. A validator copies the format checks of the organisers' evaluation code, so a file that would fail on the platform fails locally first.
 - **Model loading:** Gemma-4-31B-it is quantised to 4-bit (NF4, bitsandbytes) while loading and spread over both T4s; about 16 s per question at budget 560.
-- **Context runs (`kernels/52_full/make_hybrid_body.py`):** for each case the model sees, as text only, earlier questions and answers of the same case. The earlier answers come from independent runs (the images are not repeated). This differs from the organisers' sequential scenario, where earlier images stay in the conversation. Leaderboard comments say "contextual" for these runs.
+- **Context runs (`kernels/52_full/make_hybrid_body.py`):** for each case the model sees, as text only, earlier questions and answers of the same case. The earlier answers come from independent runs (the images are not repeated). This differs from the organisers' sequential scenario, where earlier images stay in the conversation. Leaderboard comments say "contextual" for these runs. The neoplastic-status run is the one exception to the order: its context is the model's own diagnosis answer, and diagnosis comes after neoplastic status in the official order, so that run reverses the order; the behaviour and diagnosis context runs use earlier questions only.
 - **Voting (`vote.py`):** plurality over several runs, ties to the earlier run. It helped only where the runs differed in input.
 - **Notebook generators:** `kernels/52_full/build.sh` assembles one self-contained Kaggle script from `dalphin_pipeline.py` and a body file; `RUNS.md` lists the recipe of every notebook that was built.
 
@@ -37,7 +37,7 @@ Each number is the best of several attempts (tissue 8, neoplastic status 7, beha
 | model size, 12B → 31B | tissue +0.15, the largest single gain |
 | image token budget 280 → 560 (native size) | tissue 0.590 → 0.629 |
 | organisers' prompt only, no extra instruction | free response 0.500 → 0.580, diagnosis and tissue slightly better |
-| text context from the model's own earlier answers | neoplastic status 0.881 → 0.909 (diagnosis as context), diagnosis 0.719 → 0.734 (neoplasm as context) |
+| text context from the model's own answers | neoplastic status 0.881 → 0.909 (diagnosis as context, a later question, so the order is reversed), diagnosis 0.719 → 0.734 (neoplasm as context) |
 | plurality vote over runs with different inputs | neoplastic status 0.881 → 0.904, multiple choice 0.680 → 0.697 |
 
 ## 4. What did not help (measured, briefly)
@@ -51,7 +51,7 @@ Constraints:
 - 300 cases give a standard error of about 0.02 on most scores; differences of a few thousandths are not meaningful.
 - **Behaviour is the noisiest board:** near-identical runs scored 0.515, 0.554 and 0.560, and a contextual run 0.663; I would not read the 0.663 as a stable gain.
 - Each score is the best of six to eight attempts per board; `RUNS.md` lists every attempt.
-- The context runs use text-only history and answers from earlier independent runs, which is not the organisers' sequential protocol.
+- The context runs use text-only history and answers from earlier independent runs, which is not the organisers' sequential protocol; the neoplastic-status run also reverses the order of two questions (section 2).
 - All results are for 4-bit models on free-tier hardware.
 
 With more resources I would:
