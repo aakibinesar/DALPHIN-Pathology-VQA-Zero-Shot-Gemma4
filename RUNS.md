@@ -39,3 +39,12 @@ This table is read from the headers of the generated scripts. The earliest runs 
 | 59_medgemma_real | dalphin-55-hfaccess | gemma31b (bfloat16) | MedGemma-27B from Hugging Face | ["tissue","diagnosis"] | case range: (0, 0); new-token limits: {"tissue": 64,"diagnosis": 96}; watchdog: 21600 s; questions: all |
 | 60_medgemma_copytest | dalphin-52-medgemma27-copytest | gemma31b (bfloat16) | independent, one question at a time | ["tissue","diagnosis"] | case range: (0, 0); new-token limits: {"tissue": 64,"diagnosis": 96}; watchdog: 1500 s; questions: 3 |
 | 61_medgemma_tail | dalphin-55-hfaccess | gemma31b (bfloat16) | MedGemma-27B from Hugging Face | ["diagnosis"] | case range: (0, 0); new-token limits: {"diagnosis": 96}; skip first: 250; watchdog: 7200 s; questions: all |
+
+## Score of every attempt, in the order submitted
+
+- Tissue (8): 0.154, 0.337, 0.441, 0.590, 0.564, 0.629, 0.650, 0.645
+- Neoplastic status (7): 0.683, 0.793, 0.876, 0.881, 0.904, 0.909, 0.901
+- Behaviour (7): 0.038, 0.232, 0.324, 0.560, 0.663, 0.554, 0.515
+- Diagnosis (8): 0.590, 0.616, 0.664, 0.713, 0.719, 0.734, 0.722, 0.590 (MedGemma)
+- Multiple choice (6): 0.407, 0.470, 0.613, 0.680, 0.680, 0.697
+- Free response (6): 0.433, 0.448, 0.483, 0.500, 0.480, 0.580
